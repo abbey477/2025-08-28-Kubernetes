@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K3D Architecture Diagram</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .architecture {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .browser-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .browser {
+            background: linear-gradient(145deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 15px rgba(52, 152, 219, 0.3);
+            font-weight: bold;
+            position: relative;
+        }
+
+        .browser::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 15px solid #2980b9;
+            transform: translateX(-50%);
+        }
+
+        .load-balancer {
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 8px 15px rgba(231, 76, 60, 0.3);
+            margin: 20px auto;
+            max-width: 300px;
+            position: relative;
+        }
+
+        .clusters-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .cluster {
+            border: 3px solid #34495e;
+            border-radius: 15px;
+            padding: 20px;
+            background: linear-gradient(145deg, #ecf0f1, #bdc3c7);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .cluster-title {
+            background: #34495e;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .nodes-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .node {
+            border: 2px solid #7f8c8d;
+            border-radius: 10px;
+            padding: 15px;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .node-title {
+            background: #7f8c8d;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .pods-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .pod {
+            border: 2px solid #9b59b6;
+            border-radius: 8px;
+            padding: 12px 8px;
+            background: linear-gradient(145deg, #f8f4ff, #e8d5ff);
+            text-align: center;
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #6c3483;
+            box-shadow: 0 3px 6px rgba(155, 89, 182, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .pod:hover {
+            transform: translateY(-2px);
+        }
+
+        .service {
+            background: linear-gradient(145deg, #f39c12, #e67e22);
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            margin: 10px 0;
+            font-size: 0.9em;
+            box-shadow: 0 3px 6px rgba(243, 156, 18, 0.3);
+        }
+
+        .arrow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            font-size: 2em;
+            color: #34495e;
+            font-weight: bold;
+        }
+
+        .connection-line {
+            height: 3px;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            margin: 20px 0;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .connection-line::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            top: -10px;
+            font-size: 20px;
+            color: #2980b9;
+        }
+
+        .k3d-info {
+            background: linear-gradient(145deg, #1abc9c, #16a085);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 8px 15px rgba(26, 188, 156, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .clusters-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .pods-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>K3D Architecture: Multiple Microservices in 2 Kubernetes Clusters</h1>
+        
+        <div class="k3d-info">
+            K3D (K3s in Docker) - Lightweight Kubernetes clusters running in Docker containers
+        </div>
+
+        <div class="architecture">
+            <!-- Browser Section -->
+            <div class="browser-section">
+                <div class="browser">
+                    🌐 Web Browser<br>
+                    <small>User requests</small>
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+
+            <!-- Load Balancer -->
+            <div class="load-balancer">
+                ⚖️ Load Balancer / Ingress Controller<br>
+                <small>Routes traffic to clusters</small>
+            </div>
+
+            <div class="connection-line"></div>
+
+            <!-- Clusters Container -->
+            <div class="clusters-container">
+                <!-- Cluster 1 -->
+                <div class="cluster">
+                    <div class="cluster-title">🎯 K3D Cluster 1 (Production)</div>
+                    
+                    <div class="nodes-container">
+                        <!-- Master Node -->
+                        <div class="node">
+                            <div class="node-title">🎮 Master Node (Control Plane)</div>
+                            <div style="text-align: center; color: #7f8c8d; font-size: 0.9em;">
+                                API Server, etcd, Scheduler, Controller Manager
+                            </div>
+                        </div>
+
+                        <!-- Worker Node 1 -->
+                        <div class="node">
+                            <div class="node-title">🔧 Worker Node 1</div>
+                            <div class="service">🔗 Frontend Service (ClusterIP)</div>
+                            <div class="pods-container">
+                                <div class="pod">📱 Frontend Pod 1<br><small>React App</small></div>
+                                <div class="pod">📱 Frontend Pod 2<br><small>React App</small></div>
+                            </div>
+                        </div>
+
+                        <!-- Worker Node 2 -->
+                        <div class="node">
+                            <div class="node-title">🔧 Worker Node 2</div>
+                            <div class="service">⚙️ API Service (ClusterIP)</div>
+                            <div class="pods-container">
+                                <div class="pod">🚀 API Pod 1<br><small>Node.js</small></div>
+                                <div class="pod">🚀 API Pod 2<br><small>Node.js</small></div>
+                                <div class="pod">🚀 API Pod 3<br><small>Node.js</small></div>
+                            </div>
+                        </div>
+
+                        <!-- Worker Node 3 -->
+                        <div class="node">
+                            <div class="node-title">🔧 Worker Node 3</div>
+                            <div class="service">🗄️ Database Service (ClusterIP)</div>
+                            <div class="pods-container">
+                                <div class="pod">🐘 PostgreSQL<br><small>Primary DB</small></div>
+                                <div class="pod">📊 Redis<br><small>Cache</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cluster 2 -->
+                <div class="cluster">
+                    <div class="cluster-title">🧪 K3D Cluster 2 (Development/Staging)</div>
+                    
+                    <div class="nodes-container">
+                        <!-- Master Node -->
+                        <div class="node">
+                            <div class="node-title">🎮 Master Node (Control Plane)</div>
+                            <div style="text-align: center; color: #7f8c8d; font-size: 0.9em;">
+                                API Server, etcd, Scheduler, Controller Manager
+                            </div>
+                        </div>
+
+                        <!-- Worker Node 1 -->
+                        <div class="node">
+                            <div class="node-title">🔧 Worker Node 1</div>
+                            <div class="service">🔗 Frontend Service (NodePort)</div>
+                            <div class="pods-container">
+                                <div class="pod">📱 Frontend Pod<br><small>React Dev</small></div>
+                                <div class="pod">🧪 Test Pod<br><small>E2E Tests</small></div>
+                            </div>
+                        </div>
+
+                        <!-- Worker Node 2 -->
+                        <div class="node">
+                            <div class="node-title">🔧 Worker Node 2</div>
+                            <div class="service">⚙️ Microservices</div>
+                            <div class="pods-container">
+                                <div class="pod">🔐 Auth Service<br><small>JWT Auth</small></div>
+                                <div class="pod">📬 Email Service<br><small>SMTP</small></div>
+                                <div class="pod">📁 File Service<br><small>Upload/Storage</small></div>
+                            </div>
+                        </div>
+
+                        <!-- Worker Node 3 -->
+                        <div class="node">
+                            <div class="node-title">🔧 Worker Node 3</div>
+                            <div class="service">📊 Monitoring & Logging</div>
+                            <div class="pods-container">
+                                <div class="pod">📈 Prometheus<br><small>Metrics</small></div>
+                                <div class="pod">📋 Grafana<br><small>Dashboards</small></div>
+                                <div class="pod">🔍 ELK Stack<br><small>Logs</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Docker Layer Info -->
+            <div style="background: linear-gradient(145deg, #95a5a6, #7f8c8d); color: white; padding: 15px; border-radius: 10px; text-align: center; margin-top: 20px; box-shadow: 0 8px 15px rgba(149, 165, 166, 0.3);">
+                🐳 <strong>Docker Layer:</strong> All K3s clusters and nodes run as Docker containers on the host machine<br>
+                <small>Each cluster is isolated but can communicate through Docker networking</small>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
